@@ -1,0 +1,4 @@
+name = "Morana"
+uuid = "2a27ece4-db4c-40bc-a604-beab0c313bd2"
+authors = ["Milan Rapaić <rapaja@uns.ac.rs>"]
+version = "0.1.0"
