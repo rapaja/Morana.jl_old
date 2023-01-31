@@ -1,5 +1,5 @@
 module Morana
 
-greet() = print("Hello World!")
+include("numeric/Numeric.jl")
 
 end # module Morana
