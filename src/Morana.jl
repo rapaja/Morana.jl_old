@@ -1,6 +1,6 @@
 module Morana
 
-include("core.jl")
+include("expressions.jl")
 include("numeric/Numeric.jl")
 
 end # module Morana
