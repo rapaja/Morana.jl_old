@@ -2,4 +2,5 @@ using Test
 
 using Morana
 
-include("expressions_tests.jl")
+include("test_expressions.jl")
+include("test_simplifications.jl")

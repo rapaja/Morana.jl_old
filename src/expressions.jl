@@ -103,11 +103,6 @@ end
 
 Base.log(expr::MExpression) = MLog(expr)
 
-# struct MExpandedPolynomial <: MExpression
-#     wrt::MExpression
-#     coeffs::AbstractArray{MExpression}
-# end
-
 struct MDerivative <: MExpression
     of::MExpression
     wrt::MExpression
@@ -132,7 +127,6 @@ variables(expr::MDiv) = union(variables(expr.den), variables(expr.num))
 variables(expr::MPow) = union(variables(expr.base), variables(expr.exponent))
 variables(expr::MExp) = variables(expr.exponent)
 variables(expr::MLog) = variables(expr.argument)
-# variables(expr::MExpandedPolynomial) = union(variables(expr.wrt), (variables.(expr.coeffs))...)
 variables(expr::MDerivative) = union(variables(expr.of), variables(expr.wrt))
 variables(expr::MIntegral) = union(variables(expr.of), variables(expr.wrt))
 
@@ -142,6 +136,6 @@ is_constant(expr::MExpression, vars::AbstractArray{MVariable}) =
 
 export MExpression, MLiteral, MVariable, MSum, MProd, MDiv
 export MPowerExpression, MPow
-export MExp, MLog, MExpandedPolynomial
+export MExp, MLog
 export MDerivative, MIntegral
 export variables, is_constant
