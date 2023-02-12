@@ -1,8 +1,10 @@
-export MExpression, MLiteral, MVariable,
+export MExpression, MLiteral, MSymbol,
     MSum, MProd, MDiv, MPow,
     MExp, MLog,
     MDerivative, MIntegral,
-    variables, is_constant
+    symbols, is_constant
+
+using Morana.Utils
 
 # Expressions type hierarchy
 # ==========================
@@ -13,13 +15,12 @@ struct MLiteral{T<:Number} <: MExpression
     val::T
 end
 
-struct MVariable <: MExpression
+struct MSymbol <: MExpression
     sym::Symbol
 end
 
-struct MSum <: MExpression
-    term1::MExpression
-    term2::MExpression
+struct MSum{N} <: MExpression
+    terms::MultiPocket{MExpression,N}
 end
 
 struct MProd <: MExpression
@@ -62,7 +63,7 @@ __is_eq_binary(a1, a2, b1, b2) = (a1 == b1) && (a2 == b2)
 __is_eq_binary_commutative(a1, a2, b1, b2) = __is_eq_binary(a1, a2, b1, b2) || __is_eq_binary(a1, a2, b2, b1)
 
 Base.:(==)(l1::MLiteral{T}, l2::MLiteral{S}) where {S,T} = l1.val == l2.val
-Base.:(==)(s1::MSum, s2::MSum) = __is_eq_binary_commutative(s1.term1, s1.term2, s2.term1, s2.term2)
+Base.:(==)(s1::MSum, s2::MSum) = s1.terms == s2.terms
 Base.:(==)(p1::MProd, p2::MProd) = __is_eq_binary_commutative(p1.factor1, p1.factor2, p2.factor1, p2.factor2)
 Base.:(==)(d1::MDiv, d2::MDiv) = __is_eq_binary(d1.num, d1.den, d2.num, d2.den)
 Base.:(==)(p1::MPow, p2::MPow) = __is_eq_binary(p1.base, p2.exponent, p2.base, p2.exponent)
@@ -72,17 +73,25 @@ Base.:(==)(i1::MIntegral, i2::MIntegral) = __is_eq_binary(i1.of, i1.wrt, i2.of, 
 # Enumeration of variables and constant checks
 # ============================================
 
-variables(::MLiteral{T}) where {T<:Number} = Set([])
-variables(expr::MVariable) = Set([expr])
-variables(expr::MSum) = union(variables(expr.term1), variables(expr.term2))
-variables(expr::MProd) = union(variables(expr.factor1), variables(expr.factor2))
-variables(expr::MDiv) = union(variables(expr.den), variables(expr.num))
-variables(expr::MPow) = union(variables(expr.base), variables(expr.exponent))
-variables(expr::MExp) = variables(expr.exponent)
-variables(expr::MLog) = variables(expr.argument)
-variables(expr::MDerivative) = union(variables(expr.of), variables(expr.wrt))
-variables(expr::MIntegral) = union(variables(expr.of), variables(expr.wrt))
+function symbols(bag::MultiPocket{E,N}) where {E<:MExpression,N<:Number}
+    vars = Set([])
+    for (item, _) in bag
+        union!(vars, symbols(item))
+    end
+    vars
+end
 
-is_constant(expr::MExpression, var::MVariable) = !(var in variables(expr))
-is_constant(expr::MExpression, vars::AbstractArray{MVariable}) =
+symbols(::MLiteral) = Set([])
+symbols(expr::MSymbol) = Set([expr])
+symbols(expr::MSum) = symbols(expr.terms)
+symbols(expr::MProd) = union(symbols(expr.factor1), symbols(expr.factor2))
+symbols(expr::MDiv) = union(symbols(expr.den), symbols(expr.num))
+symbols(expr::MPow) = union(symbols(expr.base), symbols(expr.exponent))
+symbols(expr::MExp) = symbols(expr.exponent)
+symbols(expr::MLog) = symbols(expr.argument)
+symbols(expr::MDerivative) = union(symbols(expr.of), symbols(expr.wrt))
+symbols(expr::MIntegral) = union(symbols(expr.of), symbols(expr.wrt))
+
+is_constant(expr::MExpression, var::MSymbol) = !(var in symbols(expr))
+is_constant(expr::MExpression, vars::AbstractArray{MSymbol}) =
     all([is_constant(expr, v) for v in vars])

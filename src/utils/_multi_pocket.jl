@@ -1,3 +1,5 @@
+export MultiPocket, insert
+
 struct MultiPocket{T,N}
     parent::MultiPocket{T,N}
     item::T
@@ -29,6 +31,15 @@ Base.in(item, bag::MultiPocket) = get(bag, item) != 0
 Base.get(bag::MultiPocket{T,N}, item) where {T,N} = isempty(bag) ? zero(N) : (bag.item == item ? bag.card : get(bag.parent, item))
 Base.haskey(bag::MultiPocket, item) = !isempty(bag) && (bag.item == item || haskey(bag.parent, item))
 
+function Base.iterate(bag::MultiPocket{K,V}, t=bag) where {K,V}
+    isempty(t) && return nothing
+    (Pair{K,V}(t.item, t.card), t.parent)
+end
+
+Base.Set(bag::MultiPocket) = Set([(k, v) for (k, v) in bag])
+
+Base.:(==)(first::MultiPocket, second::MultiPocket) = Set(first) == Set(second)
+
 function insert(bag::MultiPocket{T,N}, item, card, modifier) where {T,N}
     if iszero(card)
         bag
@@ -52,5 +63,3 @@ function insert(bag::MultiPocket{T,N}, item, card, modifier) where {T,N}
         end
     end
 end
-
-export MultiPocket, insert
