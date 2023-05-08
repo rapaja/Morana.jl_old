@@ -1,5 +1,5 @@
 module Utils
 
-include("_multi_pocket.jl")
+include("_immutable_multi_pocket_bag.jl")
 
 end # module Utils

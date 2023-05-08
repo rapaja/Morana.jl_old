@@ -3,9 +3,9 @@
 
 function Base.:+(expr1::MExpression, expr2::MExpression)
     if expr1 == expr2
-        MultiPocket{MExpression,Int64}(expr1, 2) |> MSum
+        ImmutableMultiPocketBag{MExpression,Int64}(expr1, 2) |> MSum
     else
-        s = MultiPocket{MExpression,Int64}(expr1, 1) |> MSum
+        s = ImmutableMultiPocketBag{MExpression,Int64}(expr1, 1) |> MSum
         s + expr2
     end
 end

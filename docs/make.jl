@@ -1,3 +1,11 @@
 using Documenter, Morana
 
-makedocs(sitename="MORANA: More Than Rational!")
+PAGES = [
+    "index.md"
+]
+
+makedocs(
+    sitename="MORANA.jl",
+    authors="Milan R. Rapaić",
+    modules=[Morana],
+    pages=PAGES)

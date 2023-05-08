@@ -1,1 +1,0 @@
-julia --project --color=yes docs/make.jl
