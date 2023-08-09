@@ -50,7 +50,7 @@
 
         xyz_new = insert(xyz, :x, 2, modifier)
         @test get(xyz_new, :x) == 2 && get(xyz_new, :y) == 2 && get(xyz_new, :z) == 3
-        
+
         @test insert(xyz, :x, 1, modifier) == xyz
         @test insert(xyz, :z, 0, modifier) == xy
     end
@@ -61,9 +61,9 @@
 
         xyz_new = push(xyz, :x => 2)
         @test get(xyz_new, :x) == 3 && get(xyz_new, :y) == 2 && get(xyz_new, :z) == 3
-        
+
         @test push(xyz, :x => 0) == xyz
-        @test push(xyz, :z => -3) == xy        
+        @test push(xyz, :z => -3) == xy
     end
 
 end

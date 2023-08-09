@@ -1,6 +1,6 @@
 module Discrete
 
-include("_discrete_system.jl")
-include("_control_loop.jl")
+include("_discrete_systems.jl")
+include("_simulation.jl")
 
 end
