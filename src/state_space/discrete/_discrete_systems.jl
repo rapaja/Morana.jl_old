@@ -1,9 +1,8 @@
 export DiscreteSystem
 export DiscreteIntegrator
-export init_state, next_state, output
+export default_init_state, next_state, output
 
 abstract type DiscreteSystem end
-
 
 struct DiscreteIntegrator{T<:Number} <: DiscreteSystem
     gain::T
@@ -11,7 +10,7 @@ end
 
 DiscreteIntegrator(gain::T) where {T<:Number} = DiscreteIntegrator{T}(gain)
 
-init_state(::DiscreteIntegrator{T}) where {T} = zero(T)
+default_init_state(::DiscreteIntegrator{T}) where {T} = zero(T)
 next_state(sys::DiscreteIntegrator, state, input) = state + sys.gain * input
 output(::DiscreteIntegrator, state) = state
 

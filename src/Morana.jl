@@ -1,7 +1,7 @@
 module Morana
 
 include("utils/Utils.jl")
-include("discrete/Discrete.jl")
+include("state_space/StateSpace.jl")
 # include("analytic/Analytic.jl")
 # include("numeric/Numeric.jl")
 
